@@ -75,7 +75,7 @@ class Find(Resource):
 			dist = request.args.get('dist')
 			sample_data=request.get_json()
 
-			if not sample_data:
+			if not sample_data or not isinstance(sample_data,dict):
 				return "Invalid payload/JSON object"
 			
 			points_lst = InsertPoints.query.all()
