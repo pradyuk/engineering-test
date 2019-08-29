@@ -74,12 +74,9 @@ class Find(Resource):
 		if request.method=='POST':
 			dist = request.args.get('dist')
 			sample_data=request.get_json()
-			response_object = {
-				'status': 'fail',
-				'message': 'Invalid payload.'
-			}
+
 			if not sample_data:
-				return response_object, 400
+				return "Invalid payload/JSON object"
 			
 			points_lst = InsertPoints.query.all()
 			geom = sample_data.get("geometry")
