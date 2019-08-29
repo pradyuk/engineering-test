@@ -1,17 +1,33 @@
-version: '3'
+version: '3.7'
 
 services:
-  postgres:
-    image: mdillon/postgis:9.6
-    restart: always
-    ports:
-      - "5555:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: engineTest888
-      POSTGRES_DB: zesty
-    volumes:
-      - ./init-db/:/docker-entrypoint-initdb.d/
-      - pg-data:/var/lib/postgresql/data
+    users:
+      build:
+        context: ./services/users
+        dockerfile: Dockerfile
+      volumes:
+        - './services/users:/usr/src/app'
+      ports:
+        - 5001:5000
+      environment:
+        - FLASK_APP=project/__init__.py
+        - FLASK_ENV=development
+        - APP_SETTINGS=project.config.DevelopmentConfig
+        - DATABASE_URL=postgres://postgres:engineTest888@postgres:5432/zesty
+      depends_on:
+      - postgres
+
+    postgres:
+      image: mdillon/postgis:9.6
+      restart: always
+      ports:
+        - "5555:5432"
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: engineTest888
+        POSTGRES_DB: zesty
+      volumes:
+        - ./services/users/project/init-db/:/docker-entrypoint-initdb.d/
+        - pg-data:/var/lib/postgresql/data
 volumes:
   pg-data:
